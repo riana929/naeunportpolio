@@ -1,0 +1,2495 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>김나은 | 포트폴리오 (Content Planner Portfolio)</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* Pretendard Fallback for Korean Typography */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
+:root {
+  --font-display: 'Outfit', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-body: 'Inter', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  /* macOS Sonoma/Ventura Light Theme inspired colors */
+  --bg-desktop: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+  --bg-sidebar: rgba(246, 246, 246, 0.82);
+  --bg-finder: rgba(255, 255, 255, 0.95);
+  --bg-window: #ffffff;
+  
+  --border-color: rgba(0, 0, 0, 0.1);
+  --border-window: 1px solid rgba(0, 0, 0, 0.15);
+  
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --text-muted: #aeaeb2;
+  
+  --accent-blue: #ffaab9;
+  --accent-blue-rgb: 255, 170, 185;
+  --accent-red: #ff453a;
+  --accent-yellow: #ff9f0a;
+  --accent-green: #30d158;
+  
+  --shadow-window: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  --shadow-popup: 0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  --shadow-icon: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+  --z-desktop: 1;
+  --z-dock: 1000;
+  --z-menubar: 1001;
+  --z-window-base: 10;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--bg-desktop);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+/* --- desktop wallpaper background --- */
+.desktop-wallpaper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: radial-gradient(circle at 20% 30%, rgba(255, 154, 158, 0.8) 0%, transparent 60%),
+              radial-gradient(circle at 80% 20%, rgba(254, 207, 239, 0.8) 0%, transparent 50%),
+              radial-gradient(circle at 50% 80%, rgba(135, 206, 250, 0.7) 0%, transparent 70%),
+              linear-gradient(230deg, #a1c4fd 0%, #c2e9fb 100%);
+  filter: saturate(1.4);
+}
+
+/* --- Top Menu Bar --- */
+.menu-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 25px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: var(--z-menubar);
+  color: rgba(0, 0, 0, 0.85);
+  font-family: var(--font-display);
+}
+
+.menu-bar-left, .menu-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menu-item {
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.menu-item:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.menu-item.apple-logo {
+  font-size: 14px;
+}
+
+/* --- macOS Desktop Area --- */
+.desktop-canvas {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  bottom: 80px; /* Dock space */
+  z-index: var(--z-desktop);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-end; /* Align icons on the right by default like macOS */
+  gap: 20px;
+}
+
+/* Desktop File Icons */
+.desktop-icon {
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 8px 4px;
+  border: 1px solid transparent;
+  transition: background 0.15s, border 0.15s;
+}
+
+.desktop-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.desktop-icon.selected {
+  background: rgba(255, 170, 185, 0.25) !important;
+  border: 1px solid rgba(255, 170, 185, 0.4) !important;
+}
+
+.desktop-icon-img {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.desktop-icon-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --- Finder Window Shell --- */
+.finder-window {
+  position: absolute;
+  width: 960px;
+  height: 620px;
+  background: var(--bg-finder);
+  border-radius: 12px;
+  box-shadow: var(--shadow-window);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: var(--z-window-base);
+  border: var(--border-window);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+}
+
+/* Draggable window frame styles */
+.mac-window {
+  position: absolute;
+  background: var(--bg-window);
+  border-radius: 12px;
+  box-shadow: var(--shadow-window);
+  border: var(--border-window);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 320px;
+  min-height: 240px;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: var(--z-window-base);
+}
+
+.mac-window.active {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.window-titlebar {
+  height: 52px;
+  background: linear-gradient(to bottom, #fcfcfc, #f4f4f4);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  position: relative;
+  cursor: move;
+}
+
+/* Window controls (traffic lights) */
+.window-controls {
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  left: 16px;
+  z-index: 10;
+}
+
+.control-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-btn.close {
+  background-color: var(--accent-red);
+  border: 0.5px solid rgba(0,0,0,0.12);
+}
+.control-btn.minimize {
+  background-color: var(--accent-yellow);
+  border: 0.5px solid rgba(0,0,0,0.12);
+}
+.control-btn.maximize {
+  background-color: var(--accent-green);
+  border: 0.5px solid rgba(0,0,0,0.12);
+}
+
+/* hover glyphs inside traffic lights */
+.control-btn::after {
+  content: '';
+  font-size: 7px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: opacity 0.15s;
+  position: absolute;
+}
+.window-titlebar:hover .control-btn.close::after {
+  content: '×';
+  opacity: 1;
+}
+.window-titlebar:hover .control-btn.minimize::after {
+  content: '−';
+  top: 1px;
+  opacity: 1;
+}
+.window-titlebar:hover .control-btn.maximize::after {
+  content: '+';
+  font-size: 6px;
+  opacity: 1;
+}
+
+.window-title {
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.window-content {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: var(--bg-window);
+}
+
+/* Custom TextEdit / document window styling */
+.textedit-body {
+  padding: 30px 40px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333333;
+}
+
+.textedit-body h1 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--accent-blue);
+  padding-bottom: 8px;
+}
+
+.textedit-body h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.textedit-body p {
+  margin-bottom: 12px;
+}
+
+.textedit-body ul, .textedit-body ol {
+  margin-left: 20px;
+  margin-bottom: 12px;
+}
+
+.textedit-body li {
+  margin-bottom: 6px;
+}
+
+/* --- Finder Specific Header/Toolbar --- */
+.finder-header {
+  height: 52px;
+  background: linear-gradient(to bottom, #fbfbfb, #f3f3f3);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 0 80px; /* offset for traffic lights */
+  position: relative;
+}
+
+.finder-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-arrows {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-arrow-btn {
+  background: none;
+  border: none;
+  width: 28px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background 0.15s;
+}
+
+.nav-arrow-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.nav-arrow-btn:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.nav-arrow-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.finder-path-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.finder-path-separator {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.finder-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Finder View Switcher */
+.view-switcher {
+  display: flex;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 2px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.view-btn {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.view-btn.active {
+  background: #ffffff;
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.view-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* Search Bar */
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid transparent;
+  padding: 4px 10px 4px 28px;
+  font-size: 12px;
+  border-radius: 6px;
+  width: 140px;
+  transition: width 0.2s, background 0.2s, border-color 0.2s;
+  font-family: var(--font-body);
+  outline: none;
+}
+
+.search-input:focus {
+  width: 200px;
+  background: #ffffff;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(255, 170, 185, 0.15);
+}
+
+.search-icon {
+  position: absolute;
+  left: 8px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.search-icon svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+/* --- Finder Layout Split --- */
+.finder-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar styling */
+.finder-sidebar {
+  width: 210px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-group-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.8);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sidebar-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.sidebar-item.active {
+  background: rgba(255, 170, 185, 0.12);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+.sidebar-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Tag dots style */
+.tag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+.tag-dot.red { background-color: var(--accent-red); }
+.tag-dot.orange { background-color: var(--accent-yellow); }
+.tag-dot.green { background-color: var(--accent-green); }
+.tag-dot.blue { background-color: var(--accent-blue); }
+.tag-dot.purple { background-color: #af52de; }
+
+/* Main Workspace */
+.finder-workspace {
+  flex: 1;
+  background: var(--bg-window);
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Grid View style */
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 16px;
+  padding: 24px;
+}
+
+.file-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 10px 4px;
+  border: 1.5px solid transparent;
+  transition: background 0.15s;
+}
+
+.file-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.file-item.selected {
+  background: rgba(255, 170, 185, 0.08);
+  border-color: rgba(255, 170, 185, 0.2);
+}
+
+.file-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.file-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.file-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.3;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 80px;
+}
+
+/* List View style */
+.files-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+
+.list-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding: 6px 24px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.list-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+  padding: 8px 24px;
+  cursor: pointer;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.list-item:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.list-item.selected {
+  background: rgba(255, 170, 185, 0.08);
+}
+
+.list-item-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.list-item-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.list-item-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.list-item-info {
+  color: var(--text-secondary);
+}
+
+/* --- Project Content Beautiful styling --- */
+.project-content {
+  padding: 0;
+}
+
+.project-hero {
+  background: linear-gradient(135deg, rgba(230, 240, 255, 0.8) 0%, rgba(255, 230, 245, 0.8) 100%);
+  padding: 40px 32px;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+}
+
+.project-badge {
+  display: inline-block;
+  background: var(--accent-blue);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.project-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.project-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.project-details-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  padding: 32px;
+}
+
+@media (max-width: 768px) {
+  .project-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.project-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.project-section-card {
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  padding: 20px;
+}
+
+.project-section-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.project-section-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background: var(--accent-blue);
+  border-radius: 2px;
+}
+
+.project-section-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333333;
+}
+
+.project-meta-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.meta-group {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px dashed rgba(0,0,0,0.08);
+}
+
+.meta-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.meta-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+/* Beautiful custom list inside meta-value */
+.meta-list {
+  list-style: none;
+}
+.meta-list li {
+  margin-bottom: 4px;
+  position: relative;
+  padding-left: 12px;
+}
+.meta-list li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: var(--accent-blue);
+  font-size: 8px;
+}
+
+/* Visual timeline for process section */
+.process-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.timeline-step {
+  display: flex;
+  gap: 12px;
+  position: relative;
+}
+
+.timeline-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 22px;
+  bottom: -10px;
+  width: 2px;
+  background: rgba(255, 170, 185, 0.15);
+}
+
+.step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 170, 185, 0.1);
+  color: var(--accent-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-content {
+  font-size: 13px;
+}
+
+.step-title {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.step-desc {
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Special visual showcase for results */
+.result-showcase {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.result-mural-frame {
+  width: 100%;
+  height: 200px;
+  background: #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border: 1px solid rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.mural-placeholder {
+  font-family: var(--font-display);
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 20px;
+}
+
+.mural-placeholder span {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+/* --- Skills page aesthetics --- */
+.skills-container {
+  padding: 32px;
+}
+
+.skills-header {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.skills-subtitle-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.skill-tag {
+  background: rgba(255, 170, 185, 0.08);
+  color: var(--accent-blue);
+  border: 1px solid rgba(255, 170, 185, 0.15);
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-display);
+}
+
+.skills-section-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .skills-section-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.skills-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+.skills-card h3 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tool-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tool-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tool-name {
+  color: var(--text-primary);
+}
+
+.tool-level {
+  color: var(--accent-blue);
+}
+
+.tool-progress-bg {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tool-progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--accent-blue), #5ac8fa);
+  border-radius: 10px;
+  width: 0;
+  transition: width 1s ease-out;
+}
+
+/* --- Apple macOS-style Dock --- */
+.dock-container {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 64px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  display: flex;
+  align-items: flex-end;
+  padding: 6px 12px;
+  gap: 12px;
+  z-index: var(--z-dock);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.dock-item {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: width 0.2s, height 0.2s, transform 0.2s;
+  transform-origin: bottom center;
+}
+
+.dock-item:hover {
+  transform: scale(1.2) translateY(-8px);
+}
+
+.dock-item svg, .dock-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.dock-indicator {
+  position: absolute;
+  bottom: -4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.dock-item.running .dock-indicator {
+  opacity: 1;
+}
+
+/* Dock Item Tooltips */
+.dock-item::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -36px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-display);
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.dock-item:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* --- Scrollbars and utility --- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Highlight tags */
+.text-highlight {
+  font-weight: 700;
+  color: var(--accent-blue);
+}
+
+/* Utility Animations */
+@keyframes windowOpen {
+  from {
+    transform: scale(0.9) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-open {
+  animation: windowOpen 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Responsive sidebar drawer for mobile */
+@media (max-width: 768px) {
+  .finder-window {
+    width: 95% !important;
+    height: 85% !important;
+    top: 35px !important;
+    left: 2.5% !important;
+  }
+  .finder-sidebar {
+    position: absolute;
+    left: -210px;
+    top: 52px;
+    bottom: 0;
+    z-index: 100;
+    transition: left 0.3s ease;
+  }
+  .finder-sidebar.open {
+    left: 0;
+  }
+  .search-input {
+    width: 100px;
+  }
+  .search-input:focus {
+    width: 120px;
+  }
+  .dock-container {
+    height: 56px;
+    gap: 8px;
+  }
+  .dock-item {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- Background Wallpaper -->
+  <div class="desktop-wallpaper"></div>
+
+  <!-- macOS Top Menu Bar -->
+  <div class="menu-bar">
+    <div class="menu-bar-left">
+      <span class="menu-item apple-logo"></span>
+      <span class="menu-item" style="font-weight: 700;">Finder</span>
+      <span class="menu-item">파일</span>
+      <span class="menu-item">편집</span>
+      <span class="menu-item">보기</span>
+      <span class="menu-item">이동</span>
+      <span class="menu-item">윈도우</span>
+      <span class="menu-item">도움말</span>
+    </div>
+    <div class="menu-bar-right">
+      <span class="menu-item" id="wifi-status">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+      </span>
+      <span class="menu-item" id="battery-status">100% 🔋</span>
+      <span class="menu-item" id="live-time">00:00 AM</span>
+    </div>
+  </div>
+
+  <!-- macOS Desktop Canvas with Icons -->
+  <div class="desktop-canvas" id="desktop-canvas">
+    <!-- Desktop Icons will be loaded here via JS or static -->
+    <div class="desktop-icon" data-type="file" data-id="about_me" onclick="desktopIconClick(this, event)" ondblclick="openFile('about_me')">
+      <div class="desktop-icon-img">
+        <!-- RTF Text Icon -->
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="4" width="48" height="56" rx="6" fill="#FFFFFF" stroke="#E5E5EA" stroke-width="2"/>
+          <path d="M42 4H56V18L42 4Z" fill="#E5E5EA"/>
+          <rect x="16" y="24" width="32" height="4" rx="2" fill="#FF453A"/>
+          <rect x="16" y="34" width="32" height="3" rx="1.5" fill="#8E8E93"/>
+          <rect x="16" y="42" width="24" height="3" rx="1.5" fill="#8E8E93"/>
+          <rect x="16" y="50" width="16" height="3" rx="1.5" fill="#C7C7CC"/>
+        </svg>
+      </div>
+      <div class="desktop-icon-label">about_me.rtf</div>
+    </div>
+
+    <div class="desktop-icon" data-type="file" data-id="skills_motto" onclick="desktopIconClick(this, event)" ondblclick="openFile('skills_motto')">
+      <div class="desktop-icon-img">
+        <!-- PDF Icon -->
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="4" width="48" height="56" rx="6" fill="#FFFFFF" stroke="#E5E5EA" stroke-width="2"/>
+          <path d="M42 4H56V18L42 4Z" fill="#FF3B30"/>
+          <rect x="16" y="28" width="32" height="4" rx="2" fill="#FF3B30"/>
+          <text x="18" y="22" fill="#FF3B30" font-family="Arial" font-size="10" font-weight="900">PDF</text>
+          <rect x="16" y="38" width="32" height="2" rx="1" fill="#8E8E93"/>
+          <rect x="16" y="44" width="32" height="2" rx="1" fill="#8E8E93"/>
+          <rect x="16" y="50" width="20" height="2" rx="1" fill="#C7C7CC"/>
+        </svg>
+      </div>
+      <div class="desktop-icon-label">skills_&_motto.pdf</div>
+    </div>
+
+    <div class="desktop-icon" data-type="folder" data-id="projects" onclick="desktopIconClick(this, event)" ondblclick="navigateToFolder('projects')">
+      <div class="desktop-icon-img">
+        <!-- Folder Icon -->
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 14C4 10.6863 6.68629 8 10 8H22C24.4795 8 26.7417 9.35825 27.8767 11.5283L29.1233 13.9117C29.6908 14.9968 30.822 15.6757 32.0409 15.6757H54C57.3137 15.6757 60 18.362 60 21.6757V50C60 53.3137 57.3137 56 54 56H10C6.68629 56 4 53.3137 4 50V14Z" fill="url(#folderGrad)"/>
+          <path d="M4 20C4 17.7909 5.79086 16 8 16H56C58.2091 16 60 17.7909 60 20V50C60 53.3137 57.3137 56 54 56H10C6.68629 56 4 53.3137 4 50V20Z" fill="url(#folderFrontGrad)"/>
+          <defs>
+            <linearGradient id="folderGrad" x1="4" y1="8" x2="60" y2="56" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#0A84FF"/>
+              <stop offset="1" stop-color="#0056B3"/>
+            </linearGradient>
+            <linearGradient id="folderFrontGrad" x1="4" y1="16" x2="60" y2="56" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3095FF"/>
+              <stop offset="1" stop-color="#ffaab9"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="desktop-icon-label">Projects</div>
+    </div>
+  </div>
+
+  <!-- Main Finder Window (Open by default, draggable) -->
+  <div class="finder-window mac-window active" id="finder-window" style="top: 80px; left: 120px;">
+    <!-- Titlebar / Header -->
+    <div class="window-titlebar" id="finder-titlebar">
+      <div class="window-controls">
+        <button class="control-btn close" onclick="closeFinder()"></button>
+        <button class="control-btn minimize" onclick="minimizeFinder()"></button>
+        <button class="control-btn maximize" onclick="toggleMaximizeFinder()"></button>
+      </div>
+      <div class="window-title" id="finder-title">김나은 포트폴리오 - Finder</div>
+    </div>
+
+    <!-- Toolbar / Secondary Nav -->
+    <div class="finder-header">
+      <div class="finder-nav-controls">
+        <div class="nav-arrows">
+          <button class="nav-arrow-btn" id="nav-back-btn" onclick="navigateHistoryBack()" disabled title="뒤로 가기">
+            <svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/></svg>
+          </button>
+          <button class="nav-arrow-btn" id="nav-forward-btn" onclick="navigateHistoryForward()" disabled title="앞으로 가기">
+            <svg viewBox="0 0 24 24"><path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"/></svg>
+          </button>
+        </div>
+        <div class="finder-path-title" id="finder-current-path">
+          <span>Overview</span>
+        </div>
+      </div>
+
+      <div class="finder-actions">
+        <!-- View Toggle (Grid / List) -->
+        <div class="view-switcher">
+          <button class="view-btn active" id="view-grid-btn" onclick="switchFinderView('grid')" title="아이콘 격자 보기">
+            <svg viewBox="0 0 24 24"><path d="M4,4H10V10H4V4M14,4H20V10H14V4M4,14H10V20H4V14M14,14H20V20H14V14Z"/></svg>
+          </button>
+          <button class="view-btn" id="view-list-btn" onclick="switchFinderView('list')" title="목록 보기">
+            <svg viewBox="0 0 24 24"><path d="M4,5H20V7H4V5M4,11H20V13H4V11M4,17H20V19H4V17Z"/></svg>
+          </button>
+        </div>
+        <!-- Search bar -->
+        <div class="search-container">
+          <span class="search-icon">
+            <svg viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/></svg>
+          </span>
+          <input type="text" class="search-input" id="finder-search" placeholder="검색" oninput="handleSearch(this.value)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Explorer body with Sidebar & Workspace Grid -->
+    <div class="finder-body">
+      <!-- Left Sidebar -->
+      <aside class="finder-sidebar">
+        <div class="sidebar-group">
+          <div class="sidebar-group-title">위치</div>
+          <a class="sidebar-item active" data-nav="overview" onclick="sidebarNavigate('overview')">
+            <span class="sidebar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            </span>
+            Overview
+          </a>
+        </div>
+
+        <div class="sidebar-group">
+          <div class="sidebar-group-title">Selected Work</div>
+          <a class="sidebar-item" data-nav="projects" onclick="sidebarNavigate('projects')">
+            <span class="sidebar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            All Projects
+          </a>
+          <a class="sidebar-item" data-nav="project_pbl" onclick="sidebarNavigate('project_pbl')">
+            <span class="sidebar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
+            </span>
+            PBL 골목길 개선
+          </a>
+          <a class="sidebar-item" data-nav="project_volunteer" onclick="sidebarNavigate('project_volunteer')">
+            <span class="sidebar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
+            </span>
+            날개없는천사 봉사
+          </a>
+        </div>
+
+        <div class="sidebar-group">
+          <div class="sidebar-group-title">Activities</div>
+          <a class="sidebar-item" data-nav="act_booth" onclick="sidebarNavigate('act_booth')">
+            <span class="sidebar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ff9f0a" stroke-width="2.5"><circle cx="12" cy="12" r="4"/></svg>
+            </span>
+            심리학 축제 부스
+          </a>
+          <a class="sidebar-item" data-nav="act_poster" onclick="sidebarNavigate('act_poster')">
+            <span class="sidebar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="2.5"><circle cx="12" cy="12" r="4"/></svg>
+            </span>
+            애플데이 포스터
+          </a>
+        </div>
+
+        <div class="sidebar-group">
+          <div class="sidebar-group-title">태그</div>
+          <a class="sidebar-item" onclick="filterByTag('branding')">
+            <span class="tag-dot red"></span>뷰티 브랜딩
+          </a>
+          <a class="sidebar-item" onclick="filterByTag('content')">
+            <span class="tag-dot green"></span>SNS 콘텐츠
+          </a>
+          <a class="sidebar-item" onclick="filterByTag('experience')">
+            <span class="tag-dot orange"></span>경험/활동
+          </a>
+        </div>
+      </aside>
+
+      <!-- Right main view showing workspace -->
+      <main class="finder-workspace" id="finder-workspace">
+        <!-- Rendered dynamically by index.js based on current view/path -->
+      </main>
+    </div>
+  </div>
+
+  <!-- macOS Dock at the bottom -->
+  <div class="dock-container">
+    <div class="dock-item running" data-tooltip="Finder" onclick="openFinder()">
+      <!-- macOS Finder Icon -->
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" rx="16" fill="url(#finderBg)"/>
+        <path d="M12 32C12 20.9543 20.9543 12 32 12C32 12 28.5 24 32 32C35.5 40 40 40 40 40H52V52C52 52 40 52 32 52C20.9543 52 12 43.0457 12 32Z" fill="#8CE0FF"/>
+        <path d="M32 12C43.0457 12 52 20.9543 52 32C52 43.0457 43.0457 52 32 52V12Z" fill="#ffaab9"/>
+        <!-- smile and nose outline -->
+        <path d="M22 36C22 36 24.5 39 32 39C39.5 39 42 36 42 36" stroke="#001F4D" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M32 12V32" stroke="#001F4D" stroke-width="2.5"/>
+        <path d="M28 32H36" stroke="#001F4D" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Eyes -->
+        <circle cx="23" cy="25" r="3" fill="#001F4D"/>
+        <circle cx="41" cy="25" r="3" fill="#001F4D"/>
+        <defs>
+          <linearGradient id="finderBg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#E8F4FF"/>
+            <stop offset="1" stop-color="#A9D4FF"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="dock-indicator"></div>
+    </div>
+
+    <div class="dock-item" data-tooltip="자기소개 (about_me.rtf)" onclick="openFile('about_me')">
+      <!-- TextEdit style icon -->
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" rx="16" fill="#F4F4F9" stroke="#E5E5EA" stroke-width="1"/>
+        <rect x="12" y="12" width="40" height="40" rx="4" fill="#FFFFFF" stroke="#D1D1D6" stroke-width="1"/>
+        <!-- Red writing tool style -->
+        <path d="M46 16L32 30" stroke="#FF453A" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Small writing lines -->
+        <line x1="18" y1="20" x2="32" y2="20" stroke="#8E8E93" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="28" x2="46" y2="28" stroke="#8E8E93" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="36" x2="46" y2="36" stroke="#8E8E93" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="44" x2="36" y2="44" stroke="#C7C7CC" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="dock-indicator"></div>
+    </div>
+
+    <div class="dock-item" data-tooltip="강점/관심사 (skills_&_motto.pdf)" onclick="openFile('skills_motto')">
+      <!-- Preview/PDF icon -->
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" rx="16" fill="url(#previewBg)"/>
+        <!-- Folded document sheet -->
+        <path d="M18 14H40L48 22V50C48 51.1046 47.1046 52 46 52H18C16.8954 52 16 51.1046 16 50V16C16 14.8954 16.8954 14 18 14Z" fill="#FFFFFF"/>
+        <path d="M40 14V22H48L40 14Z" fill="#A8D4FF"/>
+        <!-- Compass/Preview drawing logo -->
+        <circle cx="30" cy="36" r="8" stroke="#ffaab9" stroke-width="2"/>
+        <line x1="30" y1="31" x2="30" y2="41" stroke="#ffaab9" stroke-width="2"/>
+        <line x1="25" y1="36" x2="35" y2="36" stroke="#ffaab9" stroke-width="2"/>
+        <defs>
+          <linearGradient id="previewBg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#7ADBFF"/>
+            <stop offset="1" stop-color="#0066FF"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="dock-indicator"></div>
+    </div>
+
+    <div class="dock-item" data-tooltip="이메일 문의하기" onclick="window.location.href='mailto:20269106@hallym.ac.kr'">
+      <!-- Mail Icon -->
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" rx="16" fill="url(#mailBg)"/>
+        <!-- Envelope body -->
+        <rect x="14" y="20" width="36" height="24" rx="4" fill="#FFFFFF"/>
+        <!-- Envelope flaps -->
+        <path d="M14 20L32 32L50 20" stroke="#ffaab9" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M14 44L28 32M50 44L36 32" stroke="#B3D7FF" stroke-width="2"/>
+        <defs>
+          <linearGradient id="mailBg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#54C7FC"/>
+            <stop offset="1" stop-color="#ffaab9"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Draggable custom window overlays container -->
+  <div id="spawned-windows-container"></div>
+
+  <!-- Custom Scripts -->
+  <script>
+// --- Virtual File System Database ---
+const fileSystem = {
+  overview: {
+    name: 'Overview',
+    type: 'dir',
+    parentId: null,
+    children: ['about_me', 'skills_motto', 'projects', 'activities', 'vision']
+  },
+  
+  // High-level items
+  about_me: {
+    name: 'about_me.rtf',
+    type: 'file',
+    fileType: 'rtf',
+    size: '1.2 KB',
+    date: '2026-06-14',
+    tags: ['branding'],
+    content: `
+      <h1>김나은 (Naeun Kim)</h1>
+      <p class="text-highlight">“무심한 듯 달콤하게”</p>
+      <hr style="margin: 16px 0; border: 0; border-top: 1px solid var(--border-color);">
+      <h2>기본 정보</h2>
+      <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px;">
+        <img src="profile.jpg" alt="Profile" style="width: 110px; height: 140px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); flex-shrink: 0;">
+        <ul style="margin-top: 0;">
+          <li><strong>생년월일:</strong> 2007년 9월 29일</li>
+          <li><strong>학력:</strong> 
+            <ul>
+              <li>광문고등학교 (졸업)</li>
+              <li>한림대학교 자유전공학부 (재학)</li>
+            </ul>
+          </li>
+          <li><strong>연락처:</strong> <a href="mailto:20269106@hallym.ac.kr">20269106@hallym.ac.kr</a></li>
+        </ul>
+      </div>
+      <h2>소개</h2>
+      <p>저는 무심한 듯 툭 던져진 일상 속에서 달콤한 발견과 따뜻함을 찾아내는 것을 즐기는 기획자 김나은입니다. 가치를 분석하고, 이를 사람들에게 가장 자연스러운 형태로 전달하기 위해 노력합니다.</p>
+    `
+  },
+  
+  skills_motto: {
+    name: 'skills_&_motto.pdf',
+    type: 'file',
+    fileType: 'pdf',
+    size: '2.5 KB',
+    date: '2026-06-14',
+    tags: ['branding', 'content'],
+    content: `
+      <div class="skills-container">
+        <div class="skills-header">
+          <h1>강점 & 관심 키워드</h1>
+          <div class="skills-subtitle-tags">
+            <span class="skill-tag">BEAUTY BRANDING</span>
+            <span class="skill-tag">TREND</span>
+            <span class="skill-tag">STORYTELLING</span>
+            <span class="skill-tag">VISUAL CONTENT DESIGN</span>
+            <span class="skill-tag">MARKETING</span>
+          </div>
+        </div>
+        
+        <div class="skills-section-grid">
+          <div class="skills-card">
+            <h3>🎯 가치관 & Motto</h3>
+            <p style="font-size: 14px; line-height: 1.6; color: #333; font-style: italic;">
+              "무심한 듯 달콤하게, 매력을 자연스럽게 전달하는 콘텐츠를 만듭니다."
+            </p>
+            <h3 style="margin-top: 16px;">🔍 주요 관심 분야</h3>
+            <ul style="padding-left: 20px; font-size: 13px; line-height: 1.6;">
+              <li>뷰티 브랜드 아이덴티티 수립</li>
+              <li>SNS 마케팅 콘텐츠 기획 및 제작</li>
+              <li>브랜드 스토리텔링 발굴</li>
+            </ul>
+          </div>
+          
+          <div class="skills-card">
+            <h3>⚡ 강점 (Strengths)</h3>
+            <ul style="padding-left: 20px; font-size: 13px; line-height: 1.6; margin-bottom: 16px;">
+              <li><strong>트렌드 캐치:</strong> 빠르게 변화하는 뷰티/디지털 트렌드 감지</li>
+              <li><strong>콘텐츠 기획력:</strong> 메시지를 한눈에 담아내는 카드 및 포스터 기획</li>
+              <li><strong>브랜드 분석:</strong> 핵심 정체성을 명확하게 끄집어내는 분석력</li>
+              <li><strong>협업 & 소통:</strong> 섬세한 조율과 피드백 반영 능력</li>
+            </ul>
+            
+            <h3>🛠️ 디자인 툴 & 스킬</h3>
+            <div class="tools-list">
+              <div class="tool-item">
+                <div class="tool-info"><span class="tool-name">Canva</span><span class="tool-level">고급 (90%)</span></div>
+                <div class="tool-progress-bg"><div class="tool-progress-fill" style="width: 90%"></div></div>
+              </div>
+              <div class="tool-item">
+                <div class="tool-info"><span class="tool-name">PPT (기획서 작성)</span><span class="tool-level">중급 (75%)</span></div>
+                <div class="tool-progress-bg"><div class="tool-progress-fill" style="width: 75%"></div></div>
+              </div>
+              <div class="tool-item">
+                <div class="tool-info"><span class="tool-name">Photoshop</span><span class="tool-level">초급 (40%)</span></div>
+                <div class="tool-progress-bg"><div class="tool-progress-fill" style="width: 40%"></div></div>
+              </div>
+              <div class="tool-item">
+                <div class="tool-info"><span class="tool-name">Illustrator</span><span class="tool-level">초급 (45%)</span></div>
+                <div class="tool-progress-bg"><div class="tool-progress-fill" style="width: 45%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  
+  projects: {
+    name: 'Projects',
+    type: 'dir',
+    parentId: 'overview',
+    children: ['project_pbl', 'project_volunteer']
+  },
+  
+  activities: {
+    name: 'Activities',
+    type: 'dir',
+    parentId: 'overview',
+    children: ['act_booth', 'act_poster']
+  },
+  
+  vision: {
+    name: 'vision.rtf',
+    type: 'file',
+    fileType: 'rtf',
+    size: '950 Bytes',
+    date: '2026-06-14',
+    tags: ['branding'],
+    content: `
+      <h1>나의 비전 (My Vision)</h1>
+      <p class="text-highlight">“자연스럽고 달콤하게, 사람들의 마음을 움직이는 뷰티 브랜드 기획자”</p>
+      <hr style="margin: 16px 0; border: 0; border-top: 1px solid var(--border-color);">
+      <p>대학 1학년을 시작으로 다양한 PBL 프로젝트와 봉사활동을 경험하며 배운 가장 값진 교훈은 <strong>'콘텐츠는 공급자가 아닌 사용자가 완성하는 것'</strong>이라는 점입니다.</p>
+      <p>감각적인 트렌드 캐칭에 그치지 않고, 주민들과 아이들의 목소리를 모아 벽화로, 축제 부스로, 그리고 소통 일기로 만들어 냈던 경험들을 뷰티 영역으로 확장하고자 합니다.</p>
+      <h2>향후 3개년 로드맵</h2>
+      <ol>
+        <li><strong>Brand Discovery:</strong> 가상의 뷰티 브랜드 기획안 포트폴리오를 지속 제작하여 브랜딩 설계 능력 배양</li>
+        <li><strong>Data-driven planning:</strong> 생성형 AI 및 데이터 분석 툴 활용 능력을 심화시켜 타겟 오디언스 맞춤형 분석 역량 증대</li>
+        <li><strong>Interactive content:</strong> 피그마, 영상 디자인 스킬을 추가 습득하여 오프라인 경험과 디지털 콘텐츠가 연결되는 통합 마케팅 제안 능력 구축</li>
+      </ol>
+    `
+  },
+
+  // Project Items
+  project_pbl: {
+    name: '색으로 채우는 골목길 개선 프로젝트.folder',
+    type: 'project',
+    title: '색으로 채우는 골목길 개선 프로젝트',
+    subtitle: '지역사회 문제해결 PBL 성과발표회 장려상 수상',
+    size: '4.8 KB',
+    date: '2026-06-14',
+    tags: ['branding', 'experience'],
+    meta: {
+      role: '아이디어 제시, 전시 포스터 제작, 벽화 제작, 최종 발표 발표자',
+      context: '전공탐색프로젝트(PBL) - 생성형 AI와 지역문제와 해결 수업',
+      award: 'PBL 성과발표회 장려상 수상'
+    },
+    sections: {
+      intention: '시내와 대비되는 조명 부족으로 귀갓길 주민 불안이 가중되는 문제, 노후된 외벽과 방치된 쓰레기로 인한 미관 저하, 좁고 낡은 구조로 인해 주민들이 기피하는 골목길 환경을 개선하고자 이 프로젝트를 기획하였습니다.',
+      process: [
+        { step: '1', title: '현장 답사', desc: '춘천시 옥천동 및 봉의동 골목 현장을 직접 방문하여 위험 요인 및 환경 분석' },
+        { step: '2', title: '설문 조사', desc: '주민들의 실질적 불안과 요구를 파악하기 위해 생성형 AI를 활용하여 설문 문항 개선 및 분석 수행' },
+        { step: '3', title: '도안 제작', desc: '분석 결과를 토대로 골목 분위기를 밝힐 최적의 AI 벽화 도안 제작 및 다듬기' },
+        { step: '4', title: '주민 면담', desc: '골목 주민들과 직접 대면 면담을 진행하여 최적의 벽화 위치와 도안 선정' },
+        { step: '5', title: '벽화 제작', desc: '팀원 및 주민들과 함께 봉의동 골목길 현장에 직접 벽화 채색 작업 수행' }
+      ],
+      result: '봉의동에 친근하고 밝은 느낌의 벽화를 제작 완성하여 골목 분위기를 획기적으로 개선했습니다. 결과물은 주민 불안감을 완화하는 데 도움을 주었으며, 성과발표회에서 우수한 성적으로 장려상을 수상하는 보람을 얻었습니다.',
+      lesson: [
+        '<strong>콘텐츠는 만드는 사람보다 사용하는 사람이 중요하다:</strong> 처음에는 예쁘고 눈에 띄는 벽화 도안만을 고민했으나, 주민 면담을 거치며 골목에 상주하는 주민들이 원하는 편안한 분위기와 실용적 필요성이 더 소중함을 깨달았습니다. 사용자의 관점에서 다가가는 것이 기획의 본질임을 실감했습니다.',
+        '<strong>데이터는 기획의 든든한 근거다:</strong> 생성형 AI를 이용해 객관적인 설문을 도출하고 결과를 분석해 골목 테마를 잡았던 과정은, 기획이 디자이너의 직감만이 아닌 객관적 데이터 분석 위에 완성될 때 설득력을 갖는다는 것을 가르쳐 주었습니다.'
+      ]
+    }
+  },
+
+  project_volunteer: {
+    name: '날개없는천사 아동 봉사 활동.folder',
+    type: 'project',
+    title: '대학생 봉사 동아리 <날개없는천사>',
+    subtitle: '아동·청소년 문화/체험 프로그램 기획 및 운영',
+    size: '3.1 KB',
+    date: '2026-11-30',
+    tags: ['experience'],
+    meta: {
+      role: '프로그램 콘텐츠 공동 기획, 프로그램 진행 및 운영, 참여자 피드백 관리',
+      period: '2026.03 ~ 2026.11',
+      agency: '신당종합복지관'
+    },
+    sections: {
+      intention: '아동·청소년들이 주말 스마트폰 및 디지털 중독에서 벗어나, 다양한 오프라인 문화·체험을 접하게 돕고자 기획했습니다. 대학생 멘토와의 친근한 멘토링을 통해 소통과 정서적 지지, 그리고 또래간 사회성을 촉진하는 것을 핵심 가치로 둡니다.',
+      process: [
+        { step: '1', title: '콘텐츠 다각화 기획', desc: '2주에 한 번씩 보드게임, 걱정 인형 만들기, 미션 런닝맨, 계절 맞춤형 특별 행사 기획' },
+        { step: '2', title: '역할 분담 및 실행', desc: '활동 전 회의를 거쳐 역할 분배, 안전 매뉴얼 작성, 게임 룰 및 교구 준비 진행' },
+        { step: '3', title: '소통 피드백 반영', desc: '매 회차 활동 마감 후 아이들과 멘토가 함께 그림일기를 쓰고 의견을 공유하는 피드백 루프 운영' }
+      ],
+      result: '아동들의 적극적이고 정기적인 참여를 이끌어내어 복지관 내 만족도 최우수 등급의 활동으로 지속되었습니다. 또한 아이들의 관계 맺기 소양 발달에 보탬이 되었으며, 기획자로서도 프로그램 기획서 작성 및 타겟 눈높이에 맞춘 소통력을 강화했습니다.',
+      lesson: [
+        '<strong>타겟의 입장에서 콘텐츠를 다루는 방법:</strong> 아동·청소년이라는 뚜렷한 유저 그룹을 위해, 기획자의 흥미를 넘어 유저가 진정으로 웃고 몰입할 수 있는 안전하고 다채로운 교구를 연구하는 것의 보람을 배웠습니다.',
+        '<strong>협동과 소통의 미학:</strong> 피드백 회의와 아동들과의 상호 피드백 일기를 정리하면서, 콘텐츠는 배포 후 열린 태도로 지속 수정하고 교류할 때 완성도가 커진다는 것을 몸소 습득했습니다.'
+      ]
+    }
+  },
+
+  // Activities Items
+  act_booth: {
+    name: '심리학 동아리 축제 부스.folder',
+    type: 'project',
+    title: '심리학탐구와 또래상담동아리 축제 부스',
+    subtitle: '누구나 편하게 쉬어가는 그림심리테스트 부스 기획',
+    size: '1.5 KB',
+    date: '2026-06-14',
+    tags: ['experience'],
+    meta: {
+      role: '부스 총괄 기획, 공간 컨셉 디자인, 심리테스트 도구 설계 및 진행',
+      context: '고등학교 동아리 축제 부스 운영',
+      award: '학교 우수 동아리 선정'
+    },
+    sections: {
+      intention: '축제 소음과 경쟁 속에서 지친 학생들이 편하게 들러 따뜻한 위안을 느낄 수 있는 공간형 콘텐츠를 설계하고자 했습니다.',
+      process: [
+        { step: '★', title: '컨셉: 안방 같은 아늑함', desc: '부스 내부를 따뜻한 패브릭, 조명, 푹신한 매트로 꾸며 학생들이 부담 없이 대화하고 그림 테스트에 응할 수 있는 홈 무드 연출' },
+        { step: '★', title: '프로그램 설계', desc: '빗속의 사람(PITR), 집-나무-사람(HTP) 등 누구나 쉽게 접하는 미술 심리 테스트 기반의 공감 대화 설계' }
+      ],
+      result: '조용한 휴식과 흥미로운 테스트가 결합한 독보적 컨셉으로 많은 인기를 모았으며, 최종 평가에서 축제 우수 동아리로 선정되는 성과를 거두었습니다.',
+      lesson: [
+        '단순히 게임을 늘어놓는 부스가 아닌 "편안한 아늑함"이라는 핵심 브랜드 정체성을 공간 연출과 대화 매뉴얼 전반에 녹여내는 기획이 성공적인 고객 경험을 낳는다는 것을 배웠습니다.'
+      ]
+    }
+  },
+
+  act_poster: {
+    name: '애플데이 홍보 포스터.folder',
+    type: 'project',
+    title: '심리학탐구와 또래상담동아리 애플데이 홍보',
+    subtitle: '서로의 진심을 사과(Apple)와 함께 전달하는 행사 포스터 제작',
+    size: '1.2 KB',
+    date: '2026-10-15',
+    tags: ['content'],
+    meta: {
+      role: '홍보 포스터 메인 디자인 및 카피라이팅 기획',
+      context: '학교 학교 폭력 예방 및 우정 개선 애플데이 캠페인'
+    },
+    sections: {
+      intention: '평소 전하지 못한 고마운 마음, 혹은 사과의 메시지를 향기로운 생과일 사과와 함께 배달하는 캠페인의 참여를 장려하기 위한 감성적인 홍보물을 제작했습니다.',
+      process: [
+        { step: '✓', title: '카피라이팅', desc: '"미안한 마음, 고마운 진심을 사과로 전해봐요"라는 친숙하고 부드러운 언어로 참여 유도' },
+        { step: '✓', title: '비주얼 디자인', desc: '따스하고 화사한 수채화 일러스트 느낌의 사과 캐릭터와 파스텔톤 컬러웨이를 적용해 친근감을 극대화' }
+      ],
+      result: '캠페인 참여 학생 수 역대 최대치를 달성하는 데 기여하였으며, 직관적이면서 감성을 건드리는 비주얼 콘텐츠가 행동의 변화를 불러올 수 있음을 증명했습니다.',
+      lesson: [
+        '사용자들의 감수성을 자극하고 마음을 움직이는 것이 비주얼 기획의 시작이며, 좋은 카피와 조화로운 색감이 전달하는 심리적 영향력을 배운 소중한 경험이었습니다.'
+      ]
+    }
+  }
+};
+
+// --- Navigation State ---
+let currentFolderId = 'overview';
+const navigationHistory = ['overview'];
+let historyIndex = 0;
+let currentViewType = 'grid'; // 'grid' or 'list'
+let searchQuery = '';
+
+// --- Initial Setup and Event Listeners ---
+document.addEventListener('DOMContentLoaded', () => {
+  renderFinderWorkspace();
+  setupDraggable(document.getElementById('finder-window'));
+  updateLiveClock();
+  setInterval(updateLiveClock, 60000); // refresh every min
+  
+  // Highlighting active states
+  updateNavigationButtons();
+});
+
+// --- Window Dragging Logic (Vanilla JS) ---
+function setupDraggable(el) {
+  if (!el) return;
+  const titlebar = el.querySelector('.window-titlebar');
+  if (!titlebar) return;
+  
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  
+  titlebar.onmousedown = dragMouseDown;
+  titlebar.ontouchstart = dragMouseDown; // support mobile touch
+  
+  function dragMouseDown(e) {
+    e = e || window.event;
+    // Don't drag if clicking buttons
+    if (e.target.closest('.control-btn')) return;
+    
+    // Focus window
+    setActiveWindow(el);
+    
+    // Get cursor pos
+    if (e.type === 'touchstart') {
+      pos3 = e.touches[0].clientX;
+      pos4 = e.touches[0].clientY;
+      document.ontouchend = closeDragElement;
+      document.ontouchmove = elementDrag;
+    } else {
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      document.onmousemove = elementDrag;
+    }
+  }
+  
+  function elementDrag(e) {
+    e = e || window.event;
+    
+    let clientX, clientY;
+    if (e.type === 'touchmove') {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    
+    pos1 = pos3 - clientX;
+    pos2 = pos4 - clientY;
+    pos3 = clientX;
+    pos4 = clientY;
+    
+    // Calculate new position
+    let newTop = el.offsetTop - pos2;
+    let newLeft = el.offsetLeft - pos1;
+    
+    // Constrain inside bounds
+    const maxTop = window.innerHeight - 80;
+    const maxLeft = window.innerWidth - 100;
+    if (newTop < 25) newTop = 25; // below menu bar
+    if (newTop > maxTop) newTop = maxTop;
+    if (newLeft < -100) newLeft = -100;
+    if (newLeft > maxLeft) newLeft = maxLeft;
+    
+    el.style.top = newTop + "px";
+    el.style.left = newLeft + "px";
+  }
+  
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+    document.ontouchend = null;
+    document.ontouchmove = null;
+  }
+}
+
+// Bring active window to front
+function setActiveWindow(el) {
+  // Reset all windows active styles
+  document.querySelectorAll('.mac-window').forEach(win => {
+    win.classList.remove('active');
+  });
+  
+  // Set active style
+  el.classList.add('active');
+  
+  // Calculate highest z-index
+  const windows = Array.from(document.querySelectorAll('.mac-window'));
+  let maxZ = 10;
+  windows.forEach(win => {
+    const z = parseInt(window.getComputedStyle(win).zIndex) || 10;
+    if (z > maxZ) maxZ = z;
+  });
+  
+  el.style.zIndex = maxZ + 1;
+}
+
+// --- Dynamic Workspace Rendering ---
+function renderFinderWorkspace() {
+  const workspace = document.getElementById('finder-workspace');
+  if (!workspace) return;
+  workspace.innerHTML = '';
+  
+  // Get items under current folder
+  const currentFolder = fileSystem[currentFolderId];
+  let itemsToRender = [];
+  
+  if (currentFolder && currentFolder.children) {
+    itemsToRender = currentFolder.children.map(id => ({ id, ...fileSystem[id] }));
+  } else if (currentFolderId === 'overview') {
+    // Top overview items
+    itemsToRender = ['about_me', 'skills_motto', 'projects', 'activities', 'vision'].map(id => ({ id, ...fileSystem[id] }));
+  } else {
+    // Single page/project detailed landing inside Finder directly
+    const selectedItem = fileSystem[currentFolderId];
+    if (selectedItem && (selectedItem.type === 'project' || selectedItem.type === 'file')) {
+      renderItemDetails(workspace, selectedItem);
+      return;
+    }
+  }
+  
+  // Apply Search query filter if any
+  if (searchQuery) {
+    const query = searchQuery.toLowerCase();
+    itemsToRender = itemsToRender.filter(item => 
+      item.name.toLowerCase().includes(query) || 
+      (item.title && item.title.toLowerCase().includes(query))
+    );
+  }
+  
+  if (itemsToRender.length === 0) {
+    workspace.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-secondary); font-size: 13px;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 8px;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        검색 결과 또는 폴더 내용이 없습니다.
+      </div>
+    `;
+    return;
+  }
+  
+  if (currentViewType === 'grid') {
+    const gridEl = document.createElement('div');
+    gridEl.className = 'files-grid';
+    
+    itemsToRender.forEach(item => {
+      const isDir = item.type === 'dir' || item.type === 'project';
+      const fileIconMarkup = getIconSVG(item);
+      
+      const fileItem = document.createElement('div');
+      fileItem.className = 'file-item';
+      fileItem.onclick = (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.file-item').forEach(i => i.classList.remove('selected'));
+        fileItem.classList.add('selected');
+      };
+      
+      fileItem.ondblclick = () => {
+        if (item.type === 'dir') {
+          navigateToFolder(item.id);
+        } else if (item.type === 'project') {
+          navigateToFolder(item.id);
+        } else {
+          openFile(item.id);
+        }
+      };
+      
+      fileItem.innerHTML = `
+        <div class="file-icon">${fileIconMarkup}</div>
+        <div class="file-name">${item.name}</div>
+      `;
+      gridEl.appendChild(fileItem);
+    });
+    
+    workspace.appendChild(gridEl);
+  } else {
+    // List View
+    const listEl = document.createElement('div');
+    listEl.className = 'files-list';
+    
+    listEl.innerHTML = `
+      <div class="list-header">
+        <div>이름</div>
+        <div>종류</div>
+        <div>크기</div>
+      </div>
+    `;
+    
+    itemsToRender.forEach(item => {
+      const typeLabel = item.type === 'dir' ? '폴더' : (item.fileType === 'pdf' ? 'PDF 문서' : 'RTF 텍스트');
+      const iconMarkup = getIconSVG(item);
+      
+      const listItem = document.createElement('div');
+      listItem.className = 'list-item';
+      listItem.onclick = (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.list-item').forEach(i => i.classList.remove('selected'));
+        listItem.classList.add('selected');
+      };
+      
+      listItem.ondblclick = () => {
+        if (item.type === 'dir') {
+          navigateToFolder(item.id);
+        } else if (item.type === 'project') {
+          navigateToFolder(item.id);
+        } else {
+          openFile(item.id);
+        }
+      };
+      
+      listItem.innerHTML = `
+        <div class="list-item-name">
+          <div class="list-item-icon">${iconMarkup}</div>
+          <span>${item.name}</span>
+        </div>
+        <div class="list-item-info">${typeLabel}</div>
+        <div class="list-item-info">${item.size || '--'}</div>
+      `;
+      
+      listEl.appendChild(listItem);
+    });
+    
+    workspace.appendChild(listEl);
+  }
+}
+
+// Render detailed project views inside Finder workspace
+function renderItemDetails(container, item) {
+  if (item.type === 'project') {
+    let stepsMarkup = '';
+    if (item.sections.process && Array.isArray(item.sections.process)) {
+      stepsMarkup = item.sections.process.map(s => `
+        <div class="timeline-step">
+          <div class="step-num">${s.step}</div>
+          <div class="step-content">
+            <div class="step-title">${s.title}</div>
+            <div class="step-desc">${s.desc}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    let lessonsMarkup = '';
+    if (item.sections.lesson && Array.isArray(item.sections.lesson)) {
+      lessonsMarkup = item.sections.lesson.map(l => `<li>${l}</li>`).join('');
+    }
+
+    let metadataMarkup = '';
+    for (const [key, value] of Object.entries(item.meta)) {
+      let label = key;
+      if (key === 'role') label = '내 역할';
+      else if (key === 'context') label = '소속/과목';
+      else if (key === 'award') label = '수상/성과';
+      else if (key === 'location') label = '활동 지역';
+      else if (key === 'period') label = '활동 기간';
+      else if (key === 'agency') label = '운영 기관';
+
+      metadataMarkup += `
+        <div class="meta-group">
+          <div class="meta-label">${label}</div>
+          <div class="meta-value">${value}</div>
+        </div>
+      `;
+    }
+
+    // Showcase custom drawings/icons matching details
+    let showcaseMarkup = '';
+    if (item.id === 'project_pbl') {
+      showcaseMarkup = `
+        <div class="result-showcase">
+          <div class="result-mural-frame">
+            <div class="mural-placeholder">
+              <span>🎨🎨🎨</span>
+              춘천 봉의동 벽화 개선 완성
+              <div style="font-size: 11px; margin-top: 4px; opacity: 0.7;">색으로 채우는 골목길 개선 벽화</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    container.innerHTML = `
+      <div class="project-content">
+        <div class="project-hero">
+          <span class="project-badge">${item.tags.join(' ✦ ')}</span>
+          <h1 class="project-title">${item.title}</h1>
+          <p class="project-subtitle">${item.subtitle}</p>
+        </div>
+        
+        <div class="project-details-grid">
+          <div class="project-main-info">
+            <div class="project-section-card">
+              <div class="project-section-title">기획 의도</div>
+              <p class="project-section-text">${item.sections.intention}</p>
+            </div>
+            
+            <div class="project-section-card">
+              <div class="project-section-title">진행 과정</div>
+              <div class="process-timeline">${stepsMarkup}</div>
+            </div>
+            
+            <div class="project-section-card">
+              <div class="project-section-title">결과물 및 성과</div>
+              <p class="project-section-text">${item.sections.result}</p>
+              ${showcaseMarkup}
+            </div>
+            
+            <div class="project-section-card">
+              <div class="project-section-title">느낀 점</div>
+              <ul class="meta-list" style="font-size: 13.5px; line-height: 1.6; color: #333; display: flex; flex-direction: column; gap: 10px;">
+                ${lessonsMarkup}
+              </ul>
+            </div>
+          </div>
+          
+          <div class="project-meta-sidebar">
+            ${metadataMarkup}
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    // Normal file rendering in workspace (e.g. vision or about_me)
+    container.innerHTML = `
+      <div class="textedit-body">
+        ${item.content}
+      </div>
+    `;
+  }
+}
+
+// --- Folder Navigation Mechanics ---
+function navigateToFolder(folderId) {
+  if (!fileSystem[folderId]) return;
+  
+  // update history
+  // If we were browsing history and navigate, slice future history
+  if (historyIndex < navigationHistory.length - 1) {
+    navigationHistory.splice(historyIndex + 1);
+  }
+  
+  navigationHistory.push(folderId);
+  historyIndex = navigationHistory.length - 1;
+  
+  currentFolderId = folderId;
+  
+  // reset search query on navigates
+  document.getElementById('finder-search').value = '';
+  searchQuery = '';
+  
+  updateFinderUI();
+}
+
+function sidebarNavigate(folderId) {
+  // If already at folder, do nothing
+  if (currentFolderId === folderId) return;
+  navigateToFolder(folderId);
+}
+
+function navigateHistoryBack() {
+  if (historyIndex > 0) {
+    historyIndex--;
+    currentFolderId = navigationHistory[historyIndex];
+    updateFinderUI();
+  }
+}
+
+function navigateHistoryForward() {
+  if (historyIndex < navigationHistory.length - 1) {
+    historyIndex++;
+    currentFolderId = navigationHistory[historyIndex];
+    updateFinderUI();
+  }
+}
+
+function updateFinderUI() {
+  // Update workspace items
+  renderFinderWorkspace();
+  
+  // Update path/title breadcrumb
+  const currentPathEl = document.getElementById('finder-current-path');
+  if (currentPathEl) {
+    let pathHTML = '';
+    const folderIds = [];
+    let temp = currentFolderId;
+    
+    // reconstruct path
+    while (temp) {
+      folderIds.unshift(temp);
+      temp = fileSystem[temp].parentId;
+    }
+    
+    folderIds.forEach((id, idx) => {
+      const name = fileSystem[id].name.replace('.folder', '');
+      if (idx > 0) {
+        pathHTML += `<span class="finder-path-separator">›</span>`;
+      }
+      // make last item highlighted
+      const activeClass = idx === folderIds.length - 1 ? 'style="color: var(--text-primary)"' : 'style="color: var(--text-secondary)"';
+      pathHTML += `<span ${activeClass}>${name}</span>`;
+    });
+    
+    currentPathEl.innerHTML = pathHTML;
+  }
+  
+  // Update sidebar active items
+  document.querySelectorAll('.finder-sidebar .sidebar-item').forEach(item => {
+    const navId = item.getAttribute('data-nav');
+    if (navId === currentFolderId) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+  
+  // update history navigation buttons states
+  updateNavigationButtons();
+}
+
+function updateNavigationButtons() {
+  const backBtn = document.getElementById('nav-back-btn');
+  const forwardBtn = document.getElementById('nav-forward-btn');
+  
+  if (backBtn) backBtn.disabled = historyIndex === 0;
+  if (forwardBtn) forwardBtn.disabled = historyIndex === navigationHistory.length - 1;
+}
+
+function switchFinderView(view) {
+  currentViewType = view;
+  document.getElementById('view-grid-btn').classList.toggle('active', view === 'grid');
+  document.getElementById('view-list-btn').classList.toggle('active', view === 'list');
+  renderFinderWorkspace();
+}
+
+function handleSearch(val) {
+  searchQuery = val;
+  renderFinderWorkspace();
+}
+
+function filterByTag(tag) {
+  // Go back to projects or activities folder and apply tag search or direct filter
+  // Let's filter global system items containing this tag
+  const workspace = document.getElementById('finder-workspace');
+  if (!workspace) return;
+  workspace.innerHTML = '';
+  
+  // Update navigation breadcrumb
+  const currentPathEl = document.getElementById('finder-current-path');
+  if (currentPathEl) {
+    let tagKorean = tag === 'branding' ? '뷰티 브랜딩' : (tag === 'content' ? 'SNS 콘텐츠' : '경험/활동');
+    currentPathEl.innerHTML = `<span>태그 필터</span><span class="finder-path-separator">›</span><span style="color: var(--accent-blue)">#${tagKorean}</span>`;
+  }
+  
+  // Find all items matching tag
+  const matchedItems = Object.keys(fileSystem)
+    .filter(key => fileSystem[key].tags && fileSystem[key].tags.includes(tag))
+    .map(key => ({ id: key, ...fileSystem[key] }));
+    
+  if (matchedItems.length === 0) {
+    workspace.innerHTML = `<div style="padding: 24px; text-align: center; color: var(--text-secondary);">태그에 해당하는 파일이 없습니다.</div>`;
+    return;
+  }
+  
+  // Render grid list
+  const gridEl = document.createElement('div');
+  gridEl.className = 'files-grid';
+  
+  matchedItems.forEach(item => {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'file-item';
+    fileItem.onclick = (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.file-item').forEach(i => i.classList.remove('selected'));
+      fileItem.classList.add('selected');
+    };
+    fileItem.ondblclick = () => {
+      if (item.type === 'dir' || item.type === 'project') {
+        navigateToFolder(item.id);
+      } else {
+        openFile(item.id);
+      }
+    };
+    fileItem.innerHTML = `
+      <div class="file-icon">${getIconSVG(item)}</div>
+      <div class="file-name">${item.name}</div>
+    `;
+    gridEl.appendChild(fileItem);
+  });
+  
+  workspace.appendChild(gridEl);
+}
+
+// --- Window Manager (Spawn document files in new windows) ---
+function openFile(fileId) {
+  const file = fileSystem[fileId];
+  if (!file) return;
+  
+  // Check if window already exists
+  const existingWin = document.getElementById(`window-${fileId}`);
+  if (existingWin) {
+    setActiveWindow(existingWin);
+    existingWin.style.display = 'flex';
+    existingWin.classList.remove('minimized');
+    return;
+  }
+  
+  // Spawn coordinates offset
+  const offset = document.querySelectorAll('.mac-window').length * 20;
+  const top = 120 + offset;
+  const left = 200 + offset;
+  
+  const windowEl = document.createElement('div');
+  windowEl.className = 'mac-window animate-open';
+  windowEl.id = `window-${fileId}`;
+  windowEl.style.cssText = `top: ${top}px; left: ${left}px; width: 620px; height: 480px;`;
+  
+  const title = file.name;
+  
+  windowEl.innerHTML = `
+    <div class="window-titlebar">
+      <div class="window-controls">
+        <button class="control-btn close" onclick="closeWindow('${fileId}')"></button>
+        <button class="control-btn minimize" onclick="minimizeWindow('${fileId}')"></button>
+        <button class="control-btn maximize" onclick="toggleMaximizeWindow('${fileId}')"></button>
+      </div>
+      <div class="window-title">${title}</div>
+    </div>
+    <div class="window-content textedit-body">
+      ${file.content}
+    </div>
+  `;
+  
+  // Append to container
+  document.getElementById('spawned-windows-container').appendChild(windowEl);
+  
+  // Setup focus behavior
+  windowEl.addEventListener('mousedown', () => setActiveWindow(windowEl));
+  
+  // Setup drag
+  setupDraggable(windowEl);
+  setActiveWindow(windowEl);
+  
+  // Update indicator dots in dock
+  updateDockState(fileId, true);
+}
+
+function closeWindow(id) {
+  const el = document.getElementById(`window-${id}`);
+  if (el) {
+    el.remove();
+    updateDockState(id, false);
+  }
+}
+
+function minimizeWindow(id) {
+  const el = document.getElementById(`window-${id}`);
+  if (el) {
+    el.style.display = 'none';
+  }
+}
+
+function toggleMaximizeWindow(id) {
+  const el = document.getElementById(`window-${id}`);
+  if (el) {
+    if (el.style.width === '100vw') {
+      // Restore
+      el.style.width = '620px';
+      el.style.height = '480px';
+      el.style.top = '120px';
+      el.style.left = '200px';
+      el.style.borderRadius = '12px';
+    } else {
+      // Maximize
+      el.style.width = '100vw';
+      el.style.height = 'calc(100vh - 25px)';
+      el.style.top = '25px';
+      el.style.left = '0px';
+      el.style.borderRadius = '0px';
+    }
+  }
+}
+
+// --- Dock Indicator management ---
+function updateDockState(fileId, isRunning) {
+  let dockTooltip = '';
+  if (fileId === 'about_me') dockTooltip = '자기소개 (about_me.rtf)';
+  else if (fileId === 'skills_motto') dockTooltip = '강점/관심사 (skills_&_motto.pdf)';
+  else return;
+  
+  const dockItems = document.querySelectorAll('.dock-item');
+  dockItems.forEach(item => {
+    if (item.getAttribute('data-tooltip') === dockTooltip) {
+      item.classList.toggle('running', isRunning);
+    }
+  });
+}
+
+// --- Finder Window self toggles ---
+function closeFinder() {
+  const el = document.getElementById('finder-window');
+  if (el) {
+    el.style.display = 'none';
+    const finderDock = document.querySelector('.dock-item[data-tooltip="Finder"]');
+    if (finderDock) finderDock.classList.remove('running');
+  }
+}
+
+function minimizeFinder() {
+  const el = document.getElementById('finder-window');
+  if (el) {
+    el.style.display = 'none';
+  }
+}
+
+function openFinder() {
+  const el = document.getElementById('finder-window');
+  if (el) {
+    el.style.display = 'flex';
+    setActiveWindow(el);
+    const finderDock = document.querySelector('.dock-item[data-tooltip="Finder"]');
+    if (finderDock) finderDock.classList.add('running');
+  }
+}
+
+function toggleMaximizeFinder() {
+  const el = document.getElementById('finder-window');
+  if (el) {
+    if (el.style.width === '100vw') {
+      // Restore
+      el.style.width = '960px';
+      el.style.height = '620px';
+      el.style.top = '80px';
+      el.style.left = '120px';
+      el.style.borderRadius = '12px';
+    } else {
+      // Maximize
+      el.style.width = '100vw';
+      el.style.height = 'calc(100vh - 25px)';
+      el.style.top = '25px';
+      el.style.left = '0px';
+      el.style.borderRadius = '0px';
+    }
+  }
+}
+
+// --- Desktop Icon Clicking Utilities ---
+let lastClickedIcon = null;
+function desktopIconClick(el, event) {
+  event.stopPropagation();
+  if (lastClickedIcon) {
+    lastClickedIcon.classList.remove('selected');
+  }
+  el.classList.add('selected');
+  lastClickedIcon = el;
+}
+
+// Deselect when clicking on canvas background
+document.addEventListener('click', () => {
+  if (lastClickedIcon) {
+    lastClickedIcon.classList.remove('selected');
+    lastClickedIcon = null;
+  }
+});
+
+// --- Menu Bar Live Clock ---
+function updateLiveClock() {
+  const timeEl = document.getElementById('live-time');
+  if (!timeEl) return;
+  const now = new Date();
+  
+  // Format: "MM월 DD일 (요일) 오전/오후 HH:MM" in Korean
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const month = now.getMonth() + 1;
+  const date = now.getDate();
+  const day = days[now.getDay()];
+  
+  let hours = now.getHours();
+  const ampm = hours >= 12 ? '오후' : '오전';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // 0 should be 12
+  
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  
+  timeEl.textContent = `${month}월 ${date}일 (${day}) ${ampm} ${hours}:${minutes}`;
+}
+
+// --- SVG Icons Provider helper ---
+function getIconSVG(item) {
+  if (item.type === 'dir' || item.type === 'project') {
+    // Blue Folder SVG
+    return `
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 14C4 10.6863 6.68629 8 10 8H22C24.4795 8 26.7417 9.35825 27.8767 11.5283L29.1233 13.9117C29.6908 14.9968 30.822 15.6757 32.0409 15.6757H54C57.3137 15.6757 60 18.362 60 21.6757V50C60 53.3137 57.3137 56 54 56H10C6.68629 56 4 53.3137 4 50V14Z" fill="url(#folderGrad)"/>
+        <path d="M4 20C4 17.7909 5.79086 16 8 16H56C58.2091 16 60 17.7909 60 20V50C60 53.3137 57.3137 56 54 56H10C6.68629 56 4 53.3137 4 50V20Z" fill="url(#folderFrontGrad)"/>
+      </svg>
+    `;
+  }
+  
+  if (item.fileType === 'pdf') {
+    // PDF Document SVG
+    return `
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="4" width="48" height="56" rx="6" fill="#FFFFFF" stroke="#E5E5EA" stroke-width="2"/>
+        <path d="M42 4H56V18L42 4Z" fill="#FF3B30"/>
+        <rect x="16" y="28" width="32" height="4" rx="2" fill="#FF3B30"/>
+        <text x="18" y="22" fill="#FF3B30" font-family="Arial" font-size="10" font-weight="900">PDF</text>
+        <rect x="16" y="38" width="32" height="2" rx="1" fill="#8E8E93"/>
+        <rect x="16" y="44" width="24" height="2" rx="1" fill="#C7C7CC"/>
+      </svg>
+    `;
+  }
+  
+  // Default RTF/txt text file
+  return `
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="4" width="48" height="56" rx="6" fill="#FFFFFF" stroke="#E5E5EA" stroke-width="2"/>
+      <path d="M42 4H56V18L42 4Z" fill="#E5E5EA"/>
+      <rect x="16" y="24" width="32" height="4" rx="2" fill="#ffaab9"/>
+      <rect x="16" y="34" width="32" height="3" rx="1.5" fill="#8E8E93"/>
+      <rect x="16" y="42" width="24" height="3" rx="1.5" fill="#8E8E93"/>
+      <rect x="16" y="50" width="16" height="3" rx="1.5" fill="#C7C7CC"/>
+    </svg>
+  `;
+}
+
+</script>
+</body>
+</html>
+
